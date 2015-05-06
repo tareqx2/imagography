@@ -11,15 +11,19 @@
 		<title>Imagography - upload and share images</title>
 
 		<!-- Bootstrap core CSS -->
-		<script src="../bower_components/jquery/dist/jquery.min.js"></script>
-		<script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-		<link href="../bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+		<script src="{{url_for('static', filename='js/jquery/dist/jquery.min.js')}}"></script>
+		<script src="{{url_for('static', filename='css/bootstrap/dist/js/bootstrap.min.js')}}"></script>
+		<link href="{{url_for('static', filename='css/bootstrap/dist/css/bootstrap.min.css')}}" rel="stylesheet">
 	</head>
 
 	<body>
 
 		<div class="container">    
-				<div id="loginbox" style="margin-top:50px;" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">                    
+				<div id="loginbox" style="margin-top:50px;" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">  
+					{% if successful %}
+						<span class="glyphicon glyphicon-ok"></span>
+						<h4 style="display:inline-block">User created Successfully</h4>
+					{% endif %} 
 						<div class="panel panel-info" >
 										<div class="panel-heading">
 												<div class="panel-title">Sign In</div>
@@ -30,7 +34,7 @@
 
 												<div style="display:none" id="login-alert" class="alert alert-danger col-sm-12"></div>
 														
-												<form id="loginform" class="form-horizontal" role="form">
+												<form id="loginform" class="form-horizontal" role="form" action="http://localhost:5001/api/v1.0/user/login">
 																		
 														<div style="margin-bottom: 25px" class="input-group">
 																				<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
@@ -47,7 +51,7 @@
 														<div class="input-group">
 																			<div class="checkbox">
 																				<label>
-																					<input id="login-remember" type="checkbox" name="remember" value="1"> Remember me
+																					<input id="login-remember" type="checkbox" name="persistLogin" value="1"> Remember me
 																				</label>
 																			</div>
 																		</div>
@@ -57,7 +61,7 @@
 																		<!-- Button -->
 
 																		<div class="col-sm-12 controls">
-																			<a id="btn-login" href="#" class="btn btn-success">Login  </a>
+																			<button id="btn-login" type="submit" class="btn btn-success">Login  </button>
 
 																		</div>
 																</div>
@@ -87,7 +91,7 @@
 										<div style="float:right; font-size: 85%; position: relative; top:-10px"><a id="signinlink" href="#" onclick="$('#signupbox').hide(); $('#loginbox').show()">Sign In</a></div>
 								</div>  
 								<div class="panel-body" >
-										<form id="signupform" class="form-horizontal" role="form">
+										<form id="signupform" action="http://localhost:5001/api/v1.0/user/adduser" class="form-horizontal" role="form" method="post">
 												
 												<div id="signupalert" style="display:none" class="alert alert-danger">
 														<p>Error:</p>
@@ -95,7 +99,7 @@
 												</div>
 														
 												<div class="form-group">
-														<label for="username" class="col-md-3 control-label">Email</label>
+														<label for="username" class="col-md-3 control-label">Username</label>
 														<div class="col-md-9">
 																<input type="text" class="form-control" name="username" placeholder="Username">
 														</div>
@@ -124,7 +128,7 @@
 												<div class="form-group">
 														<label for="password" class="col-md-3 control-label">Password</label>
 														<div class="col-md-9">
-																<input type="password" class="form-control" name="passwd" placeholder="Password">
+																<input type="password" class="form-control" name="password" placeholder="Password">
 														</div>
 												</div>
 
@@ -143,5 +147,5 @@
 		</div>
 		
 	</body>
-	<script src="js/login.js"></script>
+	<script src="{{url_for('static', filename='js/login.js')}}"></script>
 </html>

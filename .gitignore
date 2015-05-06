@@ -9,7 +9,7 @@ __pycache__/
 # C extensions
 *.so
 *.db
-
+config.py
 # Distribution / packaging
 .Python
 env/
