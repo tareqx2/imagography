@@ -2,6 +2,7 @@ import db
 import os,binascii
 from flask import Flask, jsonify, make_response,abort, request, render_template, Blueprint
 from passlib.hash import pbkdf2_sha256
+from functools import update_wrapper
 from flask.ext.cors import CORS
 import os.path
 
@@ -49,8 +50,7 @@ def login_user():
 	if not successfulLogin:
 		return error(400,1040, 'Incorrect Password') #incorrect password
 
-	print "persist: " + persistLogin
-	if persistLogin:
+	if persistLogin is not None:
 		resp = make_response(render_template('some.html', 200))
 		db.session.begin()
 		user.token =  binascii.b2a_hex(os.urandom(15))
@@ -60,6 +60,6 @@ def login_user():
 		return resp
 
 
-	return jsonify({'username':username}),200
+	return make_response(('imagography.html'),200)
 
 ##############################################################################################

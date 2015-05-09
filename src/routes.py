@@ -5,6 +5,7 @@ from passlib.hash import pbkdf2_sha256
 from flask.ext.cors import CORS
 import os.path
 from userRoutes import UserRoutes
+from functools import update_wrapper
 
 app = Flask(__name__)
 app.register_blueprint(UserRoutes)
@@ -24,11 +25,40 @@ def error(status_code, app_code,message, action = ""):
 	response.status_code = status_code
 	return response
 
+def logged_in():
+	token = request.cookies.get('token')
+	user = request.cookies.get('username')
+	authenticated = false
 
-@app.route('/')
+	if token is not None and user is not None:
+		if db.session.query(db.Users).filter_by(username = user,token = token).first() is not None:
+			authenticated = true
+
+	return authenticated
+		
+
+def is_authenticated():
+	def decorator(fn):
+		def wrapped_function(*args, **kwargs):
+			# First check if user is authenticated.
+			if not logged_in():
+				return redirect(url_for('login'))
+			# For authorization error it is better to return status code 403
+			# and handle it in errorhandler separately, because the user could
+			# be already authenticated, but lack the privileges.
+			return fn(*args, **kwargs)
+		return update_wrapper(wrapped_function, fn)
+	return decorator
+
+@app.errorhandler(403)
+def forbidden_403(exception):
+	return 'Authentication Error', 403
+
+@is_authenticated()
+@app.route('/imagography')
 def index():
 	return make_response(render_template('login.html'),200)
 
 
 if __name__ == '__main__':
-		app.run(debug=True,host='0.0.0.0',port=int(os.getenv("PORT","5001")))
+		app.run(debug=True,host='0.0.0.0',port=int(os.getenv("PORT","6001")))

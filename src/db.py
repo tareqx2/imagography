@@ -4,10 +4,10 @@ from sqlalchemy.orm import create_session, relationship, load_only
 from sqlalchemy import create_engine
 from sqlalchemy.sql.expression import func, select
 from sqlalchemy.dialects.postgresql import JSON
-
+import os
 Base = declarative_base()
 
-engine = create_engine("postgres://onqgylvwetfmrs:msoX2pm2aumNGhPVmNMMowV6LI@ec2-23-23-81-221.compute-1.amazonaws.com:5432/d25efctra7hv7m")
+engine = create_engine(os.getenv("DATABASE_URL",""))
 
 class Users(Base):
 	__tablename__ = 'users'
