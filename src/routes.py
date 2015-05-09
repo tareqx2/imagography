@@ -55,7 +55,7 @@ def forbidden_403(exception):
 	return 'Authentication Error', 403
 
 @is_authenticated()
-@app.route('/imagography')
+@app.route('/')
 def index():
 	return make_response(render_template('login.html'),200)
 
