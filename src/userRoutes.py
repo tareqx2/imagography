@@ -33,7 +33,7 @@ def new_user():
 	db.session.add(user)
 	db.session.commit()
 
-	return make_response(render_template('login.html',successful="true"),200)
+	return make_response(render_template('login.html',hosturl=os.getenv('API_HOST','http://localhost:5001'),successful="true"),200)
 
 ##############################################################################################
 

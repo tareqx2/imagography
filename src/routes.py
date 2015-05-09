@@ -57,7 +57,7 @@ def forbidden_403(exception):
 @is_authenticated()
 @app.route('/')
 def index():
-	return make_response(render_template('login.html'),200)
+	return make_response(render_template('login.html',hosturl=os.getenv('API_HOST','http://localhost:5001')),200)
 
 
 if __name__ == '__main__':
