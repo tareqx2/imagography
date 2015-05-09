@@ -50,16 +50,14 @@ def login_user():
 	if not successfulLogin:
 		return error(400,1040, 'Incorrect Password') #incorrect password
 
-	if persistLogin is not None:
-		resp = make_response(render_template('some.html', 200))
-		db.session.begin()
-		user.token =  binascii.b2a_hex(os.urandom(15))
-		db.session.commit()
-		resp.set_cookie('token',user.token)
-		resp.set_cookie('username',username)
-		return resp
+	resp = make_response(render_template('imagography.html'),200)
 
-
-	return make_response(('imagography.html'),200)
+	db.session.begin()
+	user.token =  binascii.b2a_hex(os.urandom(15))
+	db.session.commit()
+	resp.set_cookie('token',user.token)
+	resp.set_cookie('username',username)
+	
+	return resp
 
 ##############################################################################################
