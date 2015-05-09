@@ -11,9 +11,9 @@
 		<title>Imagography - upload and share images</title>
 
 		<!-- Bootstrap core CSS -->
-		<script src="{{url_for('static', filename='js/jquery/dist/jquery.min.js')}}"></script>
-		<script src="{{url_for('static', filename='css/bootstrap/dist/js/bootstrap.min.js')}}"></script>
-		<link href="{{url_for('static', filename='css/bootstrap/dist/css/bootstrap.min.css')}}" rel="stylesheet">
+		<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+		<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
 	</head>
 
 	<body>
@@ -34,7 +34,7 @@
 
 												<div style="display:none" id="login-alert" class="alert alert-danger col-sm-12"></div>
 														
-												<form id="loginform" class="form-horizontal" role="form" action="http://localhost:5001/api/v1.0/user/login">
+												<form id="loginform" class="form-horizontal" role="form" action="https://localhost:5001/api/v1.0/user/login">
 																		
 														<div style="margin-bottom: 25px" class="input-group">
 																				<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
@@ -91,7 +91,7 @@
 										<div style="float:right; font-size: 85%; position: relative; top:-10px"><a id="signinlink" href="#" onclick="$('#signupbox').hide(); $('#loginbox').show()">Sign In</a></div>
 								</div>  
 								<div class="panel-body" >
-										<form id="signupform" action="http://localhost:5001/api/v1.0/user/adduser" class="form-horizontal" role="form" method="post">
+										<form id="signupform" action="https://localhost:5001/api/v1.0/user/adduser" class="form-horizontal" role="form" method="post">
 												
 												<div id="signupalert" style="display:none" class="alert alert-danger">
 														<p>Error:</p>
