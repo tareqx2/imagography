@@ -18,6 +18,8 @@ class Users(Base):
 	last_name = Column(Text)
 	email = Column(Text)
 	token = Column(Text)
+	forgot_password_token = Column(Text)
+	forgot_password_expiration = Column(DateTime, default=func.now())
 
 	@property
 	def serialize(self):
