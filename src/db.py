@@ -31,6 +31,6 @@ class Users(Base):
 			'last_name': self.last_name,
 			'email': self.email
 		}
-
+		
 Base.metadata.create_all(engine)
 session =  create_session(bind = engine)

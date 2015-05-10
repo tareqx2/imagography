@@ -75,10 +75,16 @@ def login_user():
 	return resp
 
 ##############################################################################################
-@UserRoutes.route('/passwordReset/<resetToken>',methods=['GET'])
-def reset_password():
+@UserRoutes.route('/api/v1.0/user/passwordReset/<resetToken>',methods=['GET'])
+def reset_password(resetToken):
 
-	return 200
+	user = db.session.query(db.Users).filter_by(forgot_password_token=resetToken).first()
+	if not user:
+		return error(400, 1080,'Issue with forgotten email token')
+	if datetime.datetime.utcnow() > user.forgot_password_expiration:
+		return error(400,1070,'Forgotten email token is expired')
+
+	return 'nice',200
 
 ##############################################################################################
 @UserRoutes.route('/api/v1.0/user/forgotPassword',methods=['POST'])
