@@ -15,28 +15,66 @@ $.fn.serializeObject = function()
     return o;
 };
 
+function clearPopup() {
+    $('.popup.visible').addClass('transitioning').removeClass('visible');
+    $('html').removeClass('overlay');
+
+    setTimeout(function () {
+        $('.popup').removeClass('transitioning');
+    }, 200);
+}
+
+
 $(document).ready(function(){
 
-	$('#signupform, #loginform').submit(function() {
-    	var loginParams = JSON.stringify($(this).serializeObject());
+	$('form').submit(function() {
+    	var params = JSON.stringify($(this).serializeObject());
     	$.ajax({
 		    type: "POST",
 		    url: $(this).attr('action'),
 		    // The key needs to match your method's input parameter (case-sensitive).
-		    data: loginParams,
+		    data: params,
 		    contentType: "application/json; charset=utf-8",
 		    dataType: "json",
 		    success: function(data){
-                console.log(data);
+                if(data.params){
+                    window.location.replace(data.redirectUrl+"?"+data.params);
+                }
+                else{
+                    window.location.replace(data.redirectUrl);
+                }
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 console.log(jqXHR.responseText);
             },
 		    failure: function(errMsg) {
-                alert('hi');
 		        console.log(errMsg);
 		    }
 		});
     	return false;
 	});
+
+    $('[data-popup-target]').click(function () {
+        $('html').addClass('overlay');
+        $('.popup-overlay').css('display','block');
+
+        var activePopup = $(this).attr('data-popup-target');
+        $(activePopup).addClass('visible');
+        return false;
+    });
+
+    $(document).keyup(function (e) {
+        if (e.keyCode == 27 && $('html').hasClass('overlay')) {
+            clearPopup();
+        }
+    });
+
+    $('.popup-exit').click(function () {
+        clearPopup();
+
+    });
+
+    $('.popup-overlay').click(function () {
+        clearPopup();
+    });
 });

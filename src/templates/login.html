@@ -14,6 +14,7 @@
 		<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 		<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+		<link href={{url_for('static', filename='css/signin.css')}} rel="stylesheet">
 	</head>
 
 	<body>
@@ -24,36 +25,30 @@
 						<span class="glyphicon glyphicon-ok"></span>
 						<h4 style="display:inline-block">User created Successfully</h4>
 					{% endif %} 
+					{% if messageSent %}
+						<span class="glyphicon glyphicon-ok"></span>
+						<h4 style="display:inline-block">A password reset link has been sent to your email</h4>
+					{% endif %}
 						<div class="panel panel-info" >
 										<div class="panel-heading">
 												<div class="panel-title">Sign In</div>
-												<div style="float:right; font-size: 80%; position: relative; top:-10px"><a href="#">Forgot password?</a></div>
+												<div style="float:right; font-size: 80%; position: relative; top:-10px"><a data-popup-target="#forgot-password-popup" id='forgotPswd' href="">Forgot password?</a></div>
 										</div>     
 
 										<div style="padding-top:30px" class="panel-body" >
 
 												<div style="display:none" id="login-alert" class="alert alert-danger col-sm-12"></div>
 														
-												<form id="loginform" class="form-horizontal" role="form" action="{{hosturl}}/api/v1.0/user/login">
+												<form id="loginform" class="form-horizontal" data-toggle="validator" role="form" action="{{hosturl}}/api/v1.0/user/login">
 																		
 														<div style="margin-bottom: 25px" class="input-group">
 																				<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-																				<input id="login-username" type="text" class="form-control" name="username" value="" placeholder="username or email">                                        
+																				<input id="login-username" type="text" class="form-control" name="username" value="" placeholder="username" required>                                        
 																		</div>
 																
 														<div style="margin-bottom: 25px" class="input-group">
 																				<span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-																				<input id="login-password" type="password" class="form-control" name="password" placeholder="password">
-																		</div>
-																		
-
-																
-														<div class="input-group">
-																			<div class="checkbox">
-																				<label>
-																					<input id="login-remember" type="checkbox" name="persistLogin" value="1"> Remember me
-																				</label>
-																			</div>
+																				<input id="login-password" type="password" class="form-control" name="password" onKeyPress="return submitenter(this,event)" placeholder="password" required>
 																		</div>
 
 
@@ -91,7 +86,7 @@
 										<div style="float:right; font-size: 85%; position: relative; top:-10px"><a id="signinlink" href="#" onclick="$('#signupbox').hide(); $('#loginbox').show()">Sign In</a></div>
 								</div>  
 								<div class="panel-body" >
-										<form id="signupform" action="{{hosturl}}/api/v1.0/user/adduser" class="form-horizontal" role="form" method="post">
+										<form id="signupform" data-toggle="validator" action="{{hosturl}}/api/v1.0/user/adduser" class="form-horizontal" role="form" method="post">
 												
 												<div id="signupalert" style="display:none" class="alert alert-danger">
 														<p>Error:</p>
@@ -101,7 +96,7 @@
 												<div class="form-group">
 														<label for="username" class="col-md-3 control-label">Username</label>
 														<div class="col-md-9">
-																<input type="text" class="form-control" name="username" placeholder="Username">
+																<input type="text" class="form-control" name="username" placeholder="Username" required>
 														</div>
 												</div>
 												
@@ -109,26 +104,26 @@
 												<div class="form-group">
 														<label for="email" class="col-md-3 control-label">Email</label>
 														<div class="col-md-9">
-																<input type="text" class="form-control" name="email" placeholder="Email Address">
+																<input type="text" class="form-control" name="email" placeholder="Email Address" required>
 														</div>
 												</div>
 														
 												<div class="form-group">
-														<label for="firstname" class="col-md-3 control-label">First Name</label>
+														<label for="fname" class="col-md-3 control-label">First Name</label>
 														<div class="col-md-9">
-																<input type="text" class="form-control" name="firstname" placeholder="First Name">
+																<input type="text" class="form-control" name="fname" placeholder="First Name" required>
 														</div>
 												</div>
 												<div class="form-group">
-														<label for="lastname" class="col-md-3 control-label">Last Name</label>
+														<label for="lname" class="col-md-3 control-label">Last Name</label>
 														<div class="col-md-9">
-																<input type="text" class="form-control" name="lastname" placeholder="Last Name">
+																<input type="text" class="form-control" name="lname" placeholder="Last Name" required>
 														</div>
 												</div>
 												<div class="form-group">
 														<label for="password" class="col-md-3 control-label">Password</label>
 														<div class="col-md-9">
-																<input type="password" class="form-control" name="password" placeholder="Password">
+																<input type="password" class="form-control" name="password" placeholder="Password" required>
 														</div>
 												</div>
 
@@ -145,7 +140,28 @@
  
 				 </div> 
 		</div>
-		
 	</body>
+
+	<div id="forgot-password-popup" class="popup">
+	    <div class="popup-body">	<span class="popup-exit"></span>
+			<form id="forgotPasswordform" data-toggle="validator" class="form-horizontal" role="form" action="{{hosturl}}/api/v1.0/user/forgotPassword">
+		        <div class="popup-content">
+		            <h2 class="popup-title">Enter the email address associated with your account</h2>
+		            <div class="form-group">
+						<div class="col-md-12">
+							<input type="text" class="form-control" name="email" placeholder="Email Address" required>
+						</div>
+						<div class="col-md-12" style="margin-top:10px"></div>
+						<div class="col-sm-9"></div>
+						<div class="col-sm-3 controls">
+							<button id="btn-forgot-password"  type="submit" class="btn btn-success">Enter</button>
+						</div>
+			        </div>
+			    </div>
+			</form>
+	    </div>
+	</div>
+	<div class="popup-overlay"></div>
+
 	<script src="{{url_for('static', filename='js/login.js')}}"></script>
 </html>
