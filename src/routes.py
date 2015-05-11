@@ -49,19 +49,18 @@ def is_authenticated():
 
 			#we want to generate a new token for the user
 			token = request.cookies.get('token')
-			username = request.cookies.get('user')
+			username = request.cookies.get('username')
 			db.session.begin()
-
 			newToken = binascii.b2a_hex(os.urandom(15))
 			user = db.session.query(db.Users).filter_by(username= username).first()
 			user.token = newToken
 
 			db.session.commit()
-			return newToken
 			# For authorization error it is better to return status code 403
 			# and handle it in errorhandler separately, because the user could
 			# be already authenticated, but lack the privileges.
-			#return fn(*args, **kwargs)
+			args = [newToken]
+			return fn(*args, **kwargs)
 		return update_wrapper(wrapped_function, fn)
 	return decorator
 
@@ -82,7 +81,7 @@ def index():
 
 @app.route('/imagography')
 @is_authenticated()
-def landing_page():
+def landing_page(newToken):
 
 	resp = make_response(render_template('imagography.html'),200)
 	resp.set_cookie('token',newToken)

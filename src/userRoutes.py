@@ -55,7 +55,6 @@ def new_user():
 def login_user():
 	username = request.json.get('username')
 	password = request.json.get('password')
-	persistLogin = request.json.get('persistLogin')
 
 	user = db.session.query(db.Users).filter_by(username= username).first()
 	if user is None:
@@ -83,6 +82,7 @@ def reset_password(resetToken):
 		return error(400, 1080,'Issue with forgotten email token')
 	if datetime.datetime.utcnow() > user.forgot_password_expiration:
 		return error(400,1070,'Forgotten email token is expired')
+
 
 	return 'nice',200
 
