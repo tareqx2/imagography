@@ -37,7 +37,9 @@ def new_user():
 	hash = pbkdf2_sha256.encrypt(password, rounds=200000, salt_size=16)
 
 	if db.session.query(db.Users).filter_by(username = username).first() is not None:
-		return error(400, 1020,'User already exists') # existing user
+		return error(400, 1020,'This username is not available') # existing user
+	if db.session.query(db.Users).filter_by(email = email).first() is not None:
+		return error(400, 1040,'A user with this email already exists') # existing user
 	user = db.Users(username = username)
 	user.password = hash
 	user.email = email
@@ -58,10 +60,10 @@ def login_user():
 
 	user = db.session.query(db.Users).filter_by(username= username).first()
 	if user is None:
-		return error(400, 1030, "No user with that username found") # user does not exist
+		return error(400, 1030, "Incorrect username or password") # user does not exist
 	successfulLogin = pbkdf2_sha256.verify(password, user.password)
 	if not successfulLogin:
-		return error(400,1040, 'Incorrect Password') #incorrect password
+		return error(400,1030, 'Incorrect username or password') #incorrect password
 
 	resp = make_response(jsonify({'redirectUrl':'/imagography'}),200)
 

@@ -3,7 +3,9 @@ body {
   padding-bottom: 40px;
   background-color: #eee;
 }
-
+.input-group .form-control{
+  z-index: 0;
+}
 .form-signin {
   max-width: 330px;
   padding: 15px;
@@ -133,4 +135,81 @@ margin: 200px 0px 0px 200px;
 .popup-content p {
     font-size: 13px;
     text-align: justify;
+}
+.popup-title.error{
+  color:#FF0000;
+}
+
+.form-overlay{
+  position: absolute;
+  opacity: 1;
+  background: rgba(196, 196, 196, .85);
+  background-position: 50%;
+  background-repeat: no-repeat;
+  display: none;
+}
+
+.spinner1 {
+  content: "";
+  position: absolute;
+  top: 40%;
+  left: 45%;
+  width: 0;
+  height: 0;
+  border: solid 30px;
+  border-radius: 5em;
+  border-color: #0099ff transparent #0099ff transparent;
+  -webkit-animation: spin 1s linear infinite;
+  animation: spin 1s linear infinite;
+}
+.form-overlay h5{
+  position: absolute;
+  top: calc(40% + 65px);
+  left: calc(45%);
+  z-index: 1;
+} 
+
+.dot:before, .dot:after {
+  content: ".";
+}
+.dot {
+  animation: fade 1s linear infinite;
+  -webkit-animation: fade 1s linear infinite;
+}
+.dot:after {
+  animation: fade 2s linear infinite;
+  -webkit-animation: fade 2s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@keyframes fade {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@-webkit-keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes fade {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }

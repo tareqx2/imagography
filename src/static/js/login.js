@@ -29,6 +29,23 @@ $(document).ready(function(){
 
 	$('form').submit(function() {
     	var params = JSON.stringify($(this).serializeObject());
+        var parentPanel = $(this).closest('.panel.panel-info');
+        var rect = {
+            height: parentPanel.outerHeight(),
+            width: parentPanel.outerWidth(),
+            top: parentPanel.offset().top,
+            left: parentPanel.offset().left
+        };
+
+        var overlay = $('.form-overlay');
+        
+        overlay.className = 'form-overlay';
+        $(overlay).css('display','block');
+        $(overlay).css('top',rect.top);
+        $(overlay).css('left',rect.left);
+        $(overlay).css('height',rect.height);
+        $(overlay).css('width',rect.width);
+
     	$.ajax({
 		    type: "POST",
 		    url: $(this).attr('action'),
@@ -37,6 +54,9 @@ $(document).ready(function(){
 		    contentType: "application/json; charset=utf-8",
 		    dataType: "json",
 		    success: function(data){
+                var overlay = $('.form-overlay');
+                if(overlay)
+                    overlay.css('display','none');
                 if(data.params){
                     window.location.replace(data.redirectUrl+"?"+data.params);
                 }
@@ -45,9 +65,16 @@ $(document).ready(function(){
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
-                console.log(jqXHR.responseText);
+                $('.form-overlay').css('display','none');
+                $('html').addClass('overlay');
+                $('.popup-overlay').css('display','block');
+                var errorObj = jQuery.parseJSON(jqXHR.responseText);
+                var activePopup = $('#error-popup');
+                $(activePopup).addClass('visible');
+                $('.popup-title.error',activePopup).text(errorObj.message);
             },
 		    failure: function(errMsg) {
+                $('.form-overlay').css('display','none');
 		        console.log(errMsg);
 		    }
 		});

@@ -39,7 +39,7 @@
 
 												<div style="display:none" id="login-alert" class="alert alert-danger col-sm-12"></div>
 														
-												<form id="loginform" class="form-horizontal" data-toggle="validator" role="form" action="{{hosturl}}/api/v1.0/user/login">
+												<form id="loginform" class="form-horizontal" method="post" data-toggle="validator" role="form" action="{{hosturl}}/api/v1.0/user/login">
 																		
 														<div style="margin-bottom: 25px" class="input-group">
 																				<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
@@ -48,7 +48,7 @@
 																
 														<div style="margin-bottom: 25px" class="input-group">
 																				<span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-																				<input id="login-password" type="password" class="form-control" name="password" onKeyPress="return submitenter(this,event)" placeholder="password" required>
+																				<input id="login-password" type="password" class="form-control" name="password" placeholder="password" required>
 																		</div>
 
 
@@ -104,7 +104,7 @@
 												<div class="form-group">
 														<label for="email" class="col-md-3 control-label">Email</label>
 														<div class="col-md-9">
-																<input type="text" class="form-control" name="email" placeholder="Email Address" required>
+																<input type="email" class="form-control" name="email" placeholder="Email Address" required>
 														</div>
 												</div>
 														
@@ -161,7 +161,27 @@
 			</form>
 	    </div>
 	</div>
+
+	<div id="error-popup" class="popup">
+	    <div class="popup-body">	<span class="popup-exit"></span>
+	        <div class="popup-content">
+	            <div class="popup-title error"></div>
+	            <div class="form-group">
+					<div class="col-md-12" style="margin-top:10px"></div>
+					<div class="col-sm-9"></div>
+					<div class="col-sm-3 controls">
+						<button id="btn-forgot-password" onclick="clearPopup()" class="btn btn-success">Close</button>
+					</div>
+		        </div>
+		    </div>
+	    </div>
+	</div>
 	<div class="popup-overlay"></div>
+	
+	<div class="form-overlay">
+        <div class="spinner1"></div>
+        <h5>Loading<span class="dot">.</span></h5>
+    </div>
 
 	<script src="{{url_for('static', filename='js/login.js')}}"></script>
 </html>
