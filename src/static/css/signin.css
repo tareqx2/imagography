@@ -147,6 +147,7 @@ margin: 200px 0px 0px 200px;
   background-position: 50%;
   background-repeat: no-repeat;
   display: none;
+  z-index: 1060;
 }
 
 .spinner1 {

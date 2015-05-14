@@ -77,7 +77,9 @@ def index():
 
 	successful = request.args.get('successful')
 	messageSent = request.args.get('messageSent')
-	return make_response(render_template('login.html',successful=successful,messageSent=messageSent,hosturl=os.getenv('API_HOST','http://localhost:5001')),200)
+	passwordChanged = request.args.get('passwordChanged')
+
+	return make_response(render_template('login.html',successful=successful,messageSent=messageSent,passwordChanged=passwordChanged,hosturl=os.getenv('API_HOST','http://localhost:5001')),200)
 
 @app.route('/imagography')
 @is_authenticated()

@@ -26,26 +26,34 @@ function clearPopup() {
 
 
 $(document).ready(function(){
+    var resetPasswordModal = $('#password_modal');
+    if(resetPasswordModal.length !=0){
+        resetPasswordModal.modal({
+          backdrop: 'static',
+          keyboard: false
+        });
+    }
 
 	$('form').submit(function() {
     	var params = JSON.stringify($(this).serializeObject());
-        var parentPanel = $(this).closest('.panel.panel-info');
-        var rect = {
-            height: parentPanel.outerHeight(),
-            width: parentPanel.outerWidth(),
-            top: parentPanel.offset().top,
-            left: parentPanel.offset().left
-        };
+        var parentPanel = $(this).closest('.panel.panel-info,.modal');
+        if(parentPanel.length!=0){
+            var rect = {
+                height: parentPanel.outerHeight(),
+                width: parentPanel.outerWidth(),
+                top: parentPanel.offset().top,
+                left: parentPanel.offset().left
+            };
 
-        var overlay = $('.form-overlay');
-        
-        overlay.className = 'form-overlay';
-        $(overlay).css('display','block');
-        $(overlay).css('top',rect.top);
-        $(overlay).css('left',rect.left);
-        $(overlay).css('height',rect.height);
-        $(overlay).css('width',rect.width);
-
+            var overlay = $('.form-overlay');
+            
+            overlay.className = 'form-overlay';
+            $(overlay).css('display','block');
+            $(overlay).css('top',rect.top);
+            $(overlay).css('left',rect.left);
+            $(overlay).css('height',rect.height);
+            $(overlay).css('width',rect.width);
+        }
     	$.ajax({
 		    type: "POST",
 		    url: $(this).attr('action'),
@@ -55,7 +63,7 @@ $(document).ready(function(){
 		    dataType: "json",
 		    success: function(data){
                 var overlay = $('.form-overlay');
-                if(overlay)
+                if(overlay.length!=0)
                     overlay.css('display','none');
                 if(data.params){
                     window.location.replace(data.redirectUrl+"?"+data.params);

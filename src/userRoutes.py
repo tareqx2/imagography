@@ -76,6 +76,26 @@ def login_user():
 	return resp
 
 ##############################################################################################
+@UserRoutes.route('/api/v1.0/user/resetPassword',methods=['POST'])
+def resetPassword():
+	new_password = request.json.get('new_password')
+	resetToken = request.cookies.get('resetToken')
+
+	user = db.session.query(db.Users).filter_by(forgot_password_token=resetToken).first()
+
+	if not user:
+		return error(400, 1090,'An error has occured, please try again later')
+	if datetime.datetime.utcnow() > user.forgot_password_expiration:
+		return error(400,1070,'Forgotten email token has expired, please try again')
+
+	db.session.begin()
+	user.password = pbkdf2_sha256.encrypt(new_password, rounds=200000, salt_size=16)
+	user.forgot_password_expiration = datetime.datetime.utcnow()
+	db.session.commit()
+
+	return jsonify({'redirectUrl':'/',"params":"passwordChanged=true"}),200
+
+##############################################################################################
 @UserRoutes.route('/api/v1.0/user/passwordReset/<resetToken>',methods=['GET'])
 def reset_password(resetToken):
 
@@ -83,10 +103,12 @@ def reset_password(resetToken):
 	if not user:
 		return error(400, 1080,'Issue with forgotten email token')
 	if datetime.datetime.utcnow() > user.forgot_password_expiration:
-		return error(400,1070,'Forgotten email token is expired')
+		return error(400,1070,'Forgotten email token has expired, please try again')
 
+	response = make_response(render_template('login.html',resetPassword='true'),200)
+	response.set_cookie('resetToken',resetToken)
 
-	return 'nice',200
+	return response
 
 ##############################################################################################
 @UserRoutes.route('/api/v1.0/user/forgotPassword',methods=['POST'])

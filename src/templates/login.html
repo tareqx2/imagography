@@ -12,6 +12,10 @@
 
 		<!-- Bootstrap core CSS -->
 		<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+		{% if resetPassword %}
+			<script src={{url_for('static', filename='js/validator.min.js')}}></script>
+		{% endif %}
+
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 		<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
 		<link href={{url_for('static', filename='css/signin.css')}} rel="stylesheet">
@@ -22,12 +26,22 @@
 		<div class="container">    
 				<div id="loginbox" style="margin-top:50px;" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">  
 					{% if successful %}
-						<span class="glyphicon glyphicon-ok"></span>
-						<h4 style="display:inline-block">User created Successfully</h4>
+						<div class="alert alert-success" role="alert">
+							<span class="glyphicon glyphicon-ok"></span>
+							<h4 style="display:inline-block">User created Successfully</h4>
+						</div>
 					{% endif %} 
 					{% if messageSent %}
-						<span class="glyphicon glyphicon-ok"></span>
-						<h4 style="display:inline-block">A password reset link has been sent to your email</h4>
+						<div class="alert alert-success" role="alert">
+							<span class="glyphicon glyphicon-ok"></span>
+							<h4 style="display:inline-block">A password reset link has been sent to your email</h4>
+						</div>
+					{% endif %}
+					{% if passwordChanged %}
+						<div class="alert alert-success" role="alert">
+							<span class="glyphicon glyphicon-ok"></span>
+							<h4 style="display:inline-block">Your password has been changed successfully</h4>
+						</div>
 					{% endif %}
 						<div class="panel panel-info" >
 										<div class="panel-heading">
@@ -86,7 +100,7 @@
 										<div style="float:right; font-size: 85%; position: relative; top:-10px"><a id="signinlink" href="#" onclick="$('#signupbox').hide(); $('#loginbox').show()">Sign In</a></div>
 								</div>  
 								<div class="panel-body" >
-										<form id="signupform" data-toggle="validator" action="{{hosturl}}/api/v1.0/user/adduser" class="form-horizontal" role="form" method="post">
+										<form id="signupform" data-toggle="validator" method="post" action="{{hosturl}}/api/v1.0/user/adduser" class="form-horizontal" role="form" method="post">
 												
 												<div id="signupalert" style="display:none" class="alert alert-danger">
 														<p>Error:</p>
@@ -144,7 +158,7 @@
 
 	<div id="forgot-password-popup" class="popup">
 	    <div class="popup-body">	<span class="popup-exit"></span>
-			<form id="forgotPasswordform" data-toggle="validator" class="form-horizontal" role="form" action="{{hosturl}}/api/v1.0/user/forgotPassword">
+			<form id="forgotPasswordform" method="post" data-toggle="validator" class="form-horizontal" role="form" action="{{hosturl}}/api/v1.0/user/forgotPassword">
 		        <div class="popup-content">
 		            <h2 class="popup-title">Enter the email address associated with your account</h2>
 		            <div class="form-group">
@@ -182,6 +196,35 @@
         <div class="spinner1"></div>
         <h5>Loading<span class="dot">.</span></h5>
     </div>
+
+    {% if resetPassword %}
+		<div class="modal fade" id="password_modal" role="dialog" aria-labelledby="password_modalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4>Change Password</h4>
+					</div>
+					<div class="modal-body">
+						<form data-toggle="validator" role="form" method="post" action="{{hosturl}}/api/v1.0/user/resetPassword">
+							<div class="form-group">
+								<label for="new_password" class="control-label">New Password</label>
+									<input id="inputPassword" type="password" class="form-control" name="new_password" required></input>
+							</div>
+							<div class="form-group">
+								<label for="confirm_password" class="control-label">Confirm Password</label>
+									<input type="password" class="form-control" data-match="#inputPassword" data-match-error="Passwords do not match" name="confirm_password" required></input>
+									<div class="help-block with-errors"></div>
+							</div>
+						
+						</div>
+						<div class="modal-footer">
+							<button href="#" class="btn btn-primary" id="password_modal_save">Save changes</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+    {% endif %}
 
 	<script src="{{url_for('static', filename='js/login.js')}}"></script>
 </html>
