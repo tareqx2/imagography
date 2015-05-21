@@ -147,4 +147,3 @@ def forgot_password():
 	return jsonify({'redirectUrl':'/',"params":"messageSent=true"}),200
 
 
-

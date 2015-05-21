@@ -7,6 +7,9 @@ import os.path
 from userRoutes import UserRoutes
 from functools import update_wrapper
 from datetime import timedelta
+import boto
+from boto.s3.connection import S3Connection
+from boto.s3.key import Key
 
 app = Flask(__name__)
 app.config["SESSION_COOKIE_SECURE"] = True
@@ -45,7 +48,7 @@ def is_authenticated():
 		def wrapped_function(*args, **kwargs):
 			# First check if user is authenticated.
 			if not logged_in():
-				return render_template('login.html',session='expired')
+				return make_response(render_template('login.html',session='expired'),200)
 
 			#we want to generate a new token for the user
 			token = request.cookies.get('token')
@@ -85,10 +88,45 @@ def index():
 @is_authenticated()
 def landing_page(newToken):
 
-	resp = make_response(render_template('imagography.html'),200)
+	username = request.cookies.get('username')
+	images = db.session.query(db.Images).all()
+
+	resp = make_response(render_template('imagography.html',images = images,hosturl=os.getenv('API_HOST','http://localhost:5001'),static_host=os.getenv('S3_STATIC_SITE','http://localhost:5001')),200)
 	resp.set_cookie('token',newToken)
+
 	return resp
 
+
+@app.route('/api/v1.0/uploadImage',methods=['POST'])
+@is_authenticated()
+def upload_image(newToken):
+	
+	file = request.files['file']
+
+	username = request.cookies.get('username')
+	
+	S3_BUCKET = os.environ.get('S3_BUCKET_NAME')
+
+	conn = S3Connection()
+
+	bucket = conn.get_bucket(S3_BUCKET)
+	k = bucket.new_key(file.filename+"."+username)
+	k.set_contents_from_file(file)
+	k.set_acl('public-read')
+	
+	user = db.session.query(db.Users).filter_by(username=username).first()
+
+	db.session.begin()
+
+	newImage = db.Images(user_id=user.id,src=file.filename+"."+username)
+
+	db.session.add(newImage)
+	db.session.commit()
+
+	resp = make_response('/imagography',200)
+	resp.set_cookie('token',newToken)
+
+	return resp
 
 
 if __name__ == '__main__':

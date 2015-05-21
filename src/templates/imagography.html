@@ -13,10 +13,75 @@
 		<!-- Bootstrap core CSS -->
 		<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+		<script src={{url_for('static', filename='js/dropzone.js')}}></script>
 		<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+		<link href={{url_for('static', filename='css/imagography.css')}} rel="stylesheet">
 	</head>
 
 	<body>
-		AUTHENTICATED!
+		<nav class="navbar navbar-default navbar-fixed-top">
+		  <div class="container-fluid">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="/">Imagography</a>
+			</div>
+			<div class="navbar-form navbar-left" role="search">
+				<div class="form-group">
+					<input type="text" name="search" class="form-control" placeholder="Search">
+				</div>
+			</div>
+			
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="{{hosturl}}/api/v1.0/user/logout">Signout</a></li>
+				</ul>
+		  </div> <!-- /fluid -->
+		</nav><!-- /navbar -->
+		<div class="mainContainer">
+			{% for imageSet in images %}
+			<div class="row">
+			  <div class="col-sm-6 col-md-4">
+					<div class="thumbnail">
+					  <img src="{{static_host}}{{imageSet.src}}">
+					</div>
+			  </div>
+			</div>
+			{% endfor %}
+		</div>
+		<div class="sideContainer">
+			<form action="{{hosturl}}/api/v1.0/uploadImage" class="dropzone">
+				<div id="file-upload">
+				</div>
+			</form>
+		</div>
 	</body>
+
+	<script>
+		$('form').submit(function() {
+			var params = JSON.stringify($(this).serializeObject());
+			$.ajax({
+			    type: "POST",
+			    url: $(this).attr('action'),
+			    // The key needs to match your method's input parameter (case-sensitive).
+			    data: params,
+			    contentType: "application/json; charset=utf-8",
+			    dataType: "json",
+			    success: function(data){
+			    	console.log(data);
+	            },
+	            error: function (jqXHR, textStatus, errorThrown) {
+	                $('.form-overlay').css('display','none');
+	                $('html').addClass('overlay');
+	                $('.popup-overlay').css('display','block');
+	                var errorObj = jQuery.parseJSON(jqXHR.responseText);
+	                var activePopup = $('#error-popup');
+	                $(activePopup).addClass('visible');
+	                $('.popup-title.error',activePopup).text(errorObj.message);
+	            },
+			    failure: function(errMsg) {
+	                $('.form-overlay').css('display','none');
+			        console.log(errMsg);
+			    }
+			});
+    	return false;
+		});
+	</script>
 </html>

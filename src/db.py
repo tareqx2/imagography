@@ -31,6 +31,22 @@ class Users(Base):
 			'last_name': self.last_name,
 			'email': self.email
 		}
-		
+
+class Images(Base):
+	__tablename__ = 'images'
+	id = Column(Integer,primary_key=True)
+	user_id = Column(Integer,ForeignKey(Users.id))
+	src = Column(Text)
+	caption = Column(Text)
+	thumbs_up = Column(Integer)
+
+class Comments(Base):
+	__tablename__ = 'comments'
+	id = Column(Integer,primary_key=True)
+	image_id = Column(Integer,ForeignKey(Images.id))
+	user_id = Column(Integer,ForeignKey(Users.id))
+	comment = Column(Text)
+
+
 Base.metadata.create_all(engine)
 session =  create_session(bind = engine)
