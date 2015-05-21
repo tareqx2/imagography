@@ -39,11 +39,11 @@
 			{% for imageSet in images %}
 
 			  <div class="col-sm-3 col-md-3">
-					<div class="thumbnail">
+					<a href="{{hosturl}}/api/v1.0/{{imageSet.src}}" class="thumbnail">
 						<li class="crop">
 							<img src="{{static_host}}{{imageSet.src}}">
 						</li>
-					</div>
+					</a>
 			  </div>
 			{% endfor %}
 		</div>

@@ -47,6 +47,6 @@ class Comments(Base):
 	user_id = Column(Integer,ForeignKey(Users.id))
 	comment = Column(Text)
 
-
+Images.__table__.drop(engine)
 Base.metadata.create_all(engine)
 session =  create_session(bind = engine)

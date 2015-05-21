@@ -10,19 +10,10 @@ import datetime
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import requests
+from common import is_authenticated,error
 
 UserRoutes = Blueprint('User_Routes', __name__,
 						template_folder='templates')
-
-def error(status_code, app_code,message, action = ""):
-	response = jsonify({
-		'status': status_code,
-		'appCode': app_code,
-		'message': message,
-		'action': action
-	})
-	response.status_code = status_code
-	return response
 
 @UserRoutes.route('/api/v1.0/user/adduser', methods=['POST'])
 def new_user():
