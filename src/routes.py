@@ -76,7 +76,7 @@ def index():
 	token = request.cookies.get('token')
 	username = request.cookies.get('username')
 	if token is not None and username is not None:
-		return redirect(url_for('imagography'))
+		return redirect('imagography')
 
 	successful = request.args.get('successful')
 	messageSent = request.args.get('messageSent')
