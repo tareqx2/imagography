@@ -50,5 +50,3 @@ class Comments(Base):
 
 Base.metadata.create_all(engine)
 session =  create_session(bind = engine)
-
-deleteThis = session.query(Images).delete()
