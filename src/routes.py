@@ -76,7 +76,7 @@ def index():
 	token = request.cookies.get('token')
 	username = request.cookies.get('username')
 	if token is not None and username is not None:
-		return make_response(render_template('imagography.html'),200)
+		return redirect(url_for('imagography'))
 
 	successful = request.args.get('successful')
 	messageSent = request.args.get('messageSent')
@@ -113,7 +113,7 @@ def upload_image(newToken):
 	k = bucket.new_key(file.filename+"."+username)
 	k.set_contents_from_file(file)
 	k.set_acl('public-read')
-	
+
 	user = db.session.query(db.Users).filter_by(username=username).first()
 
 	db.session.begin()
