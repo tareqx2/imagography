@@ -37,13 +37,14 @@
 		</nav><!-- /navbar -->
 		<div class="mainContainer">
 			{% for imageSet in images %}
-			<div class="row">
-			  <div class="col-sm-6 col-md-4">
+
+			  <div class="col-sm-3 col-md-3">
 					<div class="thumbnail">
-					  <img src="{{static_host}}{{imageSet.src}}">
+						<li class="crop">
+							<img src="{{static_host}}{{imageSet.src}}">
+						</li>
 					</div>
 			  </div>
-			</div>
 			{% endfor %}
 		</div>
 		<div class="sideContainer">
