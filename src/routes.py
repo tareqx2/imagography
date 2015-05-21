@@ -1,6 +1,6 @@
 import db
 import os,binascii
-from flask import Flask, jsonify, make_response,abort, request, render_template, Blueprint,url_for
+from flask import Flask, jsonify, make_response,abort, request, render_template, Blueprint,url_for,redirect
 from passlib.hash import pbkdf2_sha256
 from flask.ext.cors import CORS
 import os.path
