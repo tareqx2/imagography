@@ -4,6 +4,8 @@ from passlib.hash import pbkdf2_sha256
 from datetime import timedelta
 import db
 import os,binascii
+from PIL import Image
+from StringIO import StringIO
 
 def error(status_code, app_code,message, action = ""):
 	response = jsonify({
@@ -50,3 +52,16 @@ def is_authenticated():
 			return fn(*args, **kwargs)
 		return update_wrapper(wrapped_function, fn)
 	return decorator
+
+def create_thumbnail(image):
+	size = 210,210
+	im = Image.open(image)
+	im.thumbnail(size,Image.ANTIALIAS)
+
+	return serve_pil_image(im)
+
+def serve_pil_image(pil_img):
+    img_io = StringIO()
+    pil_img.save(img_io, 'JPEG', quality=70)
+    img_io.seek(0)
+    return img_io

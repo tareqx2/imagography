@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, make_response,abort, request, render_template, Blueprint,redirect,url_for
-from common import is_authenticated,error
+from common import is_authenticated,error,create_thumbnail
 import db
 import boto
 from boto.s3.connection import S3Connection
@@ -17,6 +17,8 @@ def upload_image(newToken):
 	
 	file = request.files['file']
 
+	image_buffer = create_thumbnail(file)
+
 	username = request.cookies.get('username')
 	
 	S3_BUCKET = os.environ.get('S3_BUCKET_NAME')
@@ -33,12 +35,17 @@ def upload_image(newToken):
 
 	db.session.commit()
 
-
+	
 	conn = S3Connection()
-
+	file.seek(0,0)
 	bucket = conn.get_bucket(S3_BUCKET)
 	k = bucket.new_key(shortenedName)
 	k.set_contents_from_file(file)
+	k.set_acl('public-read')
+
+
+	k = bucket.new_key(shortenedName+".thumbnail")
+	k.set_contents_from_string(image_buffer.getvalue())
 	k.set_acl('public-read')
 
 	resp = make_response('/imagography',200)
