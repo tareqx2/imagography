@@ -55,7 +55,18 @@ def is_authenticated():
 
 def create_thumbnail(image):
 	size = 210,210
+	aspRatio = 1
 	im = Image.open(image)
+
+	width,height=im.size
+	
+	if height >width:
+		aspRatio = height/float(width)
+	else:
+		aspRatio = width/float(height)
+
+	size = 210*aspRatio,210*aspRatio
+
 	im.thumbnail(size,Image.ANTIALIAS)
 
 	return serve_pil_image(im)

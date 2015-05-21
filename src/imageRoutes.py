@@ -16,7 +16,6 @@ ImageRoutes = Blueprint('Image_Routes', __name__,
 def upload_image(newToken):
 	
 	file = request.files['file']
-
 	image_buffer = create_thumbnail(file)
 
 	username = request.cookies.get('username')
